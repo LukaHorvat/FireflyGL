@@ -219,27 +219,18 @@ namespace FireflyGL {
 		}
 
 		public static void AddToUpdateList ( IUpdatable Updatable ) {
-
 			updateList.AddLast( Updatable );
 		}
-
 		public static void RemoveFromUpdateList ( IUpdatable Updatable ) {
-
 			updateRemoveList.AddLast( Updatable );
 		}
-
 		public static void AddToRenderList ( IRenderable Renderable ) {
-
 			renderList.AddLast( Renderable );
 		}
-
 		public static void RemoveFromRenderList ( IRenderable Renderable ) {
-
 			renderRemoveList.AddLast( Renderable );
 		}
-
 		public static void RemoveEntity ( object Entity ) {
-
 			if ( Entity is IUpdatable ) {
 				updateRemoveList.AddLast( Entity as IUpdatable );
 			}
