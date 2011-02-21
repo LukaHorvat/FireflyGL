@@ -26,9 +26,7 @@ namespace FireflyGLTest {
 			//Firefly.RenderList.AddLast( background );
 
 
-			for ( int i = 0 ; i < 500 ; ++i ) {
-				new Particle( 400, 250 );
-			}
+			new Mouse();
 		}
 	}
 }

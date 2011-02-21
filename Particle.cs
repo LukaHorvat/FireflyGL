@@ -18,11 +18,12 @@ namespace FireflyGLTest {
 			set { ySpeed = value; }
 		}
 
+		float r, g, b;
+
 		public Particle ( int X, int Y )
 			: base() {
 
 			float color = Utility.GetRandomF();
-			float r, g, b;
 			if ( color > 0.75F ) {
 				r = 1;
 				g = 0;
@@ -72,6 +73,12 @@ namespace FireflyGLTest {
 			float velocity = (float)Math.Sqrt( xSpeed * xSpeed + ySpeed * ySpeed );
 			ScaleX = velocity;
 			Rotation = (float)Math.Atan2( ySpeed, xSpeed );
+
+			if ( Tile.Tiles.ContainsKey( (int)( X / 20 * 40 + Y / 20 ) ) ) {
+				if ( Utility.GetRandomF() > 0.5F ) {
+					Tile.Tiles[ (int)( X / 20 * 40 + Y / 20 ) ].Hit( r, g, b );
+				}
+			}
 
 			if ( X < 0 || X > 800 || Y > 500 ) {
 				Firefly.RemoveEntity( this );
