@@ -9,6 +9,7 @@ namespace FireflyGL {
 	class DisplayObject : IRenderable {
 
 		protected Matrix4 scaleMatrix, rotationMatrix, translationMatrix, modelMatrix; //Camera and window matrices are stored in separate classes because they are common to all display objects
+		
 		float scaleX = 1, scaleY = 1, x, y, rotation;
 		bool requiresUpdate = true;
 
@@ -44,8 +45,6 @@ namespace FireflyGL {
 			translationMatrix = Matrix4.CreateTranslation( x, y, 0 ); //0,3 = x, 1,3 = y
 
 			modelMatrix = scaleMatrix * rotationMatrix * translationMatrix;
-			//Console.WriteLine( "p" );
-			//Console.WriteLine( default(Vector4) );
 			requiresUpdate = false;
 		}
 

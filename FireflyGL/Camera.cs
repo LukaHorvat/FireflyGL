@@ -8,47 +8,57 @@ namespace FireflyGL {
 
 	class Camera {
 
-		private static Matrix4 cameraMatrix;
+		static Camera currentCamera;
+		public static Camera CurrentCamera {
+			get { return Camera.currentCamera; }
+			set { Camera.currentCamera = value; }
+		}
+
 		public static Matrix4 CameraMatrix {
-			get { return cameraMatrix; }
-			set { cameraMatrix = value; }
+			get { return currentCamera.Matrix; }
 		}
 
-		private Matrix4 matrix;
-		public Matrix4 Matrix {
-			get { return matrix; }
-			set { throw new Exception( "Can't change the camera matrix directly. Use the X and Y properties" ); }
-		}
+		private DisplayObject matrixManager; //We use the DisplayObject class as a matrix holder
+		private Matrix4 finalMatrix;
+		private bool requiresUpdate = false;
 
-		private float x, y;
-		public float Y {
-			get { return y; }
-			set {
-				y = value;
-				matrix.Row3.Y = y;
-			}
+		public float Rotation {
+			get { return matrixManager.Rotation; }
+			set { matrixManager.Rotation = value; requiresUpdate = true; }
 		}
 		public float X {
-			get { return x; }
+			get { return matrixManager.X; }
+			set { matrixManager.X = value; requiresUpdate = true; } //TODO: Wrap GameWindow
+		}
+		public float Y {
+			get { return matrixManager.Y; }
+			set { matrixManager.Y = value; requiresUpdate = true; }
+		}
+		public float Zoom {
+			get { return matrixManager.ScaleX; }
 			set {
-				x = value;
-				matrix.Row3.X = x;
+				matrixManager.ScaleX = value;
+				matrixManager.ScaleY = value;
+				requiresUpdate = true;
 			}
 		}
-
-		static Camera () {
-
-			cameraMatrix = Matrix4.Identity;
+		public Matrix4 Matrix {
+			get {
+				if ( requiresUpdate ) {
+					requiresUpdate = false;
+				}
+				return finalMatrix;
+			}
 		}
 
 		public Camera () {
 
-			matrix = Matrix4.Identity;
+			matrixManager = new DisplayObject();
 		}
 
 		public void Activate () {
 
-			cameraMatrix = matrix;
-		}
+			currentCamera = this;
+		}//TODO: Rewrite Camera class
 	}
 }
