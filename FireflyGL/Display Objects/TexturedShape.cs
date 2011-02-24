@@ -80,7 +80,7 @@ namespace FireflyGL {
 			( program.Locations[ "texture" ] as Uniform ).LoadTexture( texture );
 			( program.Locations[ "window_matrix" ] as Uniform ).LoadMatrix( Firefly.WindowMatrix );
 			( program.Locations[ "projection_matrix" ] as Uniform ).LoadMatrix( Firefly.ProjectionMatrix );
-			( program.Locations[ "camera_matrix" ] as Uniform ).LoadMatrix( Camera.CameraMatrix );
+			( program.Locations[ "camera_matrix" ] as Uniform ).LoadMatrix( Camera.CurrentCamera.Matrix );
 			( program.Locations[ "model_matrix" ] as Uniform ).LoadMatrix( modelMatrix );
 
 			GL.EnableClientState( ArrayCap.VertexArray );

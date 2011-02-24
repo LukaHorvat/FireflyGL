@@ -74,9 +74,10 @@ namespace FireflyGLTest {
 			ScaleX = velocity;
 			Rotation = (float)Math.Atan2( ySpeed, xSpeed );
 
-			if ( Tile.Tiles.ContainsKey( (int)( X / 20 * 40 + Y / 20 ) ) ) {
-				if ( Utility.GetRandomF() > 0.5F ) {
-					Tile.Tiles[ (int)( X / 20 * 40 + Y / 20 ) ].Hit( r, g, b );
+			if ( Tile.Tiles.ContainsKey( (int)( X / 20 ) * 40 + (int)( Y / 20 ) ) ) {
+				if ( !Tile.Tiles[ (int)( X / 20 ) * 40 + (int)( Y / 20 ) ].IsHit ) {
+					Tile.Tiles[ (int)( X / 20 ) * 40 + (int)( Y / 20 ) ].Hit( r, g, b );
+					Firefly.RemoveEntity( this );
 				}
 			}
 

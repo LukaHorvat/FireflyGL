@@ -41,11 +41,19 @@ namespace FireflyGLTest {
 
 			if ( e.Key == Key.F9 ) return;
 			if ( e.Key == Key.Left ) {
-				Camera.CurrentCamera.Rotation -= 0.01F;
+				Camera.CurrentCamera.X += 20;
 				return;
 			}
 			if ( e.Key == Key.Right ) {
 				Camera.CurrentCamera.X -= 20;
+				return;
+			}
+			if ( e.Key == Key.Up ) {
+				Camera.CurrentCamera.Zoom++;
+				return;
+			}
+			if ( e.Key == Key.Down ) {
+				Camera.CurrentCamera.Rotation += 0.1F;
 				return;
 			}
 			if ( started ) return;
@@ -63,9 +71,12 @@ namespace FireflyGLTest {
 		void Mouse_ButtonUp ( object sender, MouseButtonEventArgs e ) {
 
 			if ( !mouseDown ) return;
+
 			mouseDown = false;
-			new Tile( e.X, e.Y );
-			Console.WriteLine( e.X );
+			OpenTK.Vector2 realMouse = Camera.CurrentCamera.GetApsoluteMouse( e.X, e.Y );
+			if ( e.Button == MouseButton.Left ) {
+				new Tile( (int)realMouse.X, (int)realMouse.Y );
+			}
 		}
 
 		#endregion

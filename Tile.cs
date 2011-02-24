@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OpenTK;
 using FireflyGL;
 
 namespace FireflyGLTest {
@@ -29,23 +30,33 @@ namespace FireflyGLTest {
 			get { return isHit; }
 			set { isHit = value; }
 		}
-		float size = 20;
+		int size = 20;
 
 		public Tile ( int X, int Y ) {
-
-			filledPolygons.AddLast( new Polygon( false,
-				0, 0, 0.2F, 0.2F, 0.2F, 1,
-				size, 0, 0.2F, 0.2F, 0.2F, 1,
-				size, size, 0.2F, 0.2F, 0.2F, 1,
-				0, size, 0.2F, 0.2F, 0.2F, 1 ) );
-			SetPolygons();
 
 			this.X = (int)( X / size ) * size;
 			this.Y = (int)( Y / size ) * size;
 
-			if ( !Tiles.ContainsKey( (int)( this.X / size * ( 800 / size ) + this.Y / size ) ) ) {
-				Tiles.Add( (int)( this.X / size * ( 800 / size ) + this.Y / size ), this );
+			if ( this.X < 0 ) this.X -= size;
+			if ( this.Y < 0 ) this.Y -= size;
+
+			int index = (int)( this.X / size * ( 800 / size ) + this.Y / size );
+			if ( !Tiles.ContainsKey( index ) ) {
+				Tiles.Add( index, this );
+
+				filledPolygons.AddLast( new Polygon( false,
+					0, 0, 0.2F, 0.2F, 0.2F, 1,
+					size, 0, 0.2F, 0.2F, 0.2F, 1,
+					size, size, 0.2F, 0.2F, 0.2F, 1,
+					0, size, 0.2F, 0.2F, 0.2F, 1 ) );
+				SetPolygons();
+
 				Firefly.AddToRenderList( this );
+			} else {
+
+				Firefly.RemoveEntity( Tiles[ index ] );
+				Tiles.Remove( index );
+				new Particle( 400, 250 );
 			}
 		}
 
