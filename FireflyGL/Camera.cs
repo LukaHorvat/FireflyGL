@@ -64,9 +64,8 @@ namespace FireflyGL {
 			finalMatrix = Matrix4.Identity;
 			scaleMatrix = Matrix4.Scale( zoom, zoom, 1 );
 			offsetMatrix = Matrix4.CreateTranslation(
-				Firefly.Window.GameWindow.Width / 2,
-				Firefly.Window.GameWindow.Height / 2,
-				//TODO: Wrap GameWindow
+				Firefly.Window.Width / 2,
+				Firefly.Window.Height / 2,
 				0 );
 			rotationMatrix = Matrix4.CreateRotationZ( rotation );
 			translationMatrix = Matrix4.CreateTranslation( x, y, 0 );
@@ -90,8 +89,8 @@ namespace FireflyGL {
 			float x, y;
 			x = X;
 			y = Y;
-			x -= Firefly.Window.GameWindow.Width / 2;
-			y -= Firefly.Window.GameWindow.Height / 2;
+			x -= Firefly.Window.Width / 2;
+			y -= Firefly.Window.Height / 2;
 			x /= zoom;
 			y /= zoom;
 			float angle= (float)Math.Atan2( y, x );

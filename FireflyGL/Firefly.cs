@@ -94,8 +94,8 @@ namespace FireflyGL {
 			defaultTextureProgram.AddAttribLocation( "vertex_texcoord" );
 
 			windowMatrix = Matrix4.Identity;
-			projectionMatrix = new Matrix4( new Vector4( 2F / window.GameWindow.Width, 0, 0, 0 ),
-				new Vector4( 0, -2F / window.GameWindow.Height, 0, 0 ),
+			projectionMatrix = new Matrix4( new Vector4( 2F / window.Width, 0, 0, 0 ),
+				new Vector4( 0, -2F / window.Height, 0, 0 ),
 				new Vector4( 0, 0, 1, 0 ),
 				new Vector4( 0, 0, 0, 1 ) ) * Matrix4.CreateTranslation( -1, 1, 0 );
 

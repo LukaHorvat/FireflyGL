@@ -12,6 +12,19 @@ namespace FireflyGL {
 
 		internal GameWindow GameWindow;
 
+		public int Width {
+			get { return GameWindow.Width; }
+			set { GameWindow.Width = value; }
+		}
+		public int Height {
+			get { return GameWindow.Height; }
+			set { GameWindow.Height = value; }
+		}
+
+		internal int Keyboard {
+			get { return GameWindow.Keyboard; }
+		}
+
 		private System.Drawing.Color clearColor;
 		public System.Drawing.Color ClearColor {
 			get { return clearColor; }
