@@ -69,6 +69,7 @@
     <Compile Include="FireflyGL\Display Objects\Shape.cs" />
     <Compile Include="FireflyGL\Display Objects\TexturedShape.cs" />
     <Compile Include="FireflyGL\Geometry\Polygon.cs" />
+    <Compile Include="FireflyGL\Input.cs" />
     <Compile Include="FireflyGL\Interfaces\IShaderObject.cs" />
     <Compile Include="FireflyGL\OGL Objects\Attribute.cs" />
     <Compile Include="FireflyGL\OGL Objects\Buffer.cs" />

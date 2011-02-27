@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OpenTK;
+using OpenTK.Input;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 
@@ -21,7 +22,7 @@ namespace FireflyGL {
 			set { GameWindow.Height = value; }
 		}
 
-		internal int Keyboard {
+		internal KeyboardDevice Keyboard {
 			get { return GameWindow.Keyboard; }
 		}
 
