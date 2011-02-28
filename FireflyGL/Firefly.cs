@@ -133,14 +133,12 @@ namespace FireflyGL {
 			var renderTimer = new Stopwatch();
 			var updateTimer = new Stopwatch();
 
+			setupOpenGL();
+			Input.Initialize();
+
 			renderTimer.Start();
 			updateTimer.Start();
-
-			setupOpenGL();
-
 			while ( !kill ) {
-
-				window.GameWindow.ProcessEvents();
 
 				if ( renderTimer.ElapsedTicks / (float)Stopwatch.Frequency + renderOverTime > renderLock ) {
 
@@ -164,6 +162,8 @@ namespace FireflyGL {
 					updateOverTime -= updateLock;
 
 					individualTimer.Start();
+					Input.Update();
+					window.GameWindow.ProcessEvents();
 					update();
 
 					individualTimer.Stop();
@@ -206,7 +206,7 @@ namespace FireflyGL {
 
 		private static void update () {
 
-			window.GameWindow.Title = "UpdateTime: " + (int)( updateTime * 1000 ) + " RenderTime: " + (int)( renderTime * 1000 );
+			window.GameWindow.Title = "UpdateTime( " + updateList.Count + " ): " + (int)( updateTime * 1000 ) + " RenderTime( " + renderList.Count + " ): " + (int)( renderTime * 1000 );
 
 			foreach ( IUpdatable updatable in updateRemoveList ) {
 				updateList.Remove( updatable );

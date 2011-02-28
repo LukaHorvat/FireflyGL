@@ -208,6 +208,12 @@ namespace FireflyGL {
 		BackSlash,
 		LastKey
 	}
+	public enum KeyState : int {
+
+		Up = 0,
+		Down,
+		Click
+	}
 
 	public enum MouseButton : int {
 		Left = 0,
@@ -223,6 +229,12 @@ namespace FireflyGL {
 		Button8,
 		Button9,
 		LastButton
+	}
+	public enum MouseState : int {
+
+		Up = 0,
+		Down,
+		Click
 	}
 
 	class Input {
@@ -245,18 +257,67 @@ namespace FireflyGL {
 			set { Input.mouseY = value; }
 		}
 
-		static Input () {
+		static Dictionary<Key, KeyState> keys;
+		public static Dictionary<Key, KeyState> Keys {
+			get { return Input.keys; }
+			set { Input.keys = value; }
+		}
+
+		static LinkedList<Key> toRelease;
+
+		public static void Initialize () {
 
 			MouseDown = new MouseHandler( downHandler );
 			MouseClick = new MouseHandler( clickHandler );
 			MousePress = new MouseHandler( pressHandler );
 			MouseRelease = new MouseHandler( releaseHandler );
 			MouseMove = new MouseHandler( moveHandler );
+			toRelease = new LinkedList<Key>();
+			keys = new Dictionary<Key, KeyState>();
+
+			string[] names = Enum.GetNames( typeof( Key ) );
+			for ( int i = 0 ; i < names.Length ; ++i ) {
+				try {
+					keys.Add( (Key)Enum.Parse( typeof( Key ), names[ i ] ), KeyState.Up );
+				} catch ( Exception e ) {
+					string stupingWarnings = e.Message;
+				}
+			}
 
 			Firefly.Window.GameWindow.Mouse.Move += new EventHandler<MouseMoveEventArgs>( opentkMove );
+			Firefly.Window.GameWindow.Keyboard.KeyDown += new EventHandler<KeyboardKeyEventArgs>( opentkKeyDown );
+			Firefly.Window.GameWindow.Keyboard.KeyUp += new EventHandler<KeyboardKeyEventArgs>( opentkKeyUp );
+		}
+
+		public static void Update () {
+
+			foreach ( Key key in toRelease ) {
+				keys[ key ] = KeyState.Up;
+			}
+			toRelease.Clear();
+		}
+
+		static void opentkKeyUp ( object sender, KeyboardKeyEventArgs e ) {
+
+			Key temp = (Key)Enum.Parse(
+				typeof( Key ),
+				Enum.GetName( typeof( Key ), (int)e.Key )
+				);
+			keys[ temp ] = KeyState.Click;
+			toRelease.AddLast( temp );
+		}
+
+		static void opentkKeyDown ( object sender, KeyboardKeyEventArgs e ) {
+
+			keys[ (Key)Enum.Parse(
+				typeof( Key ),
+				Enum.GetName( typeof( Key ), (int)e.Key )
+				)
+				] = KeyState.Down;
 		}
 
 		static void opentkMove ( object sender, MouseMoveEventArgs e ) {
+
 			mouseX = e.X;
 			mouseY = e.Y;
 		}
