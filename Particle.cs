@@ -20,6 +20,8 @@ namespace FireflyGLTest {
 
 		float r, g, b;
 
+		int startX, startY;
+
 		public Particle ( int X, int Y )
 			: base() {
 
@@ -57,18 +59,31 @@ namespace FireflyGLTest {
 
 			this.X = X;
 			this.Y = Y;
+			startX = X;
+			startY = Y;
 
-			xSpeed = Utility.GetRandomF() * 6 - 3;
-			ySpeed = Utility.GetRandomF() * 6 - 6;
+			xSpeed = Utility.GetRandomF() * 10 - 5;
+			ySpeed = Utility.GetRandomF() * 10 - 5;
 		}
 
 		#region IUpdatable Members
 
 		public void Update () {
 
-			ySpeed += 0.05F;
+			//ySpeed += 0.2F;
 			X += xSpeed;
 			Y += ySpeed;
+			ScaleY -= Utility.GetRandomF() * 0.01F;
+
+			if ( ScaleY < 0.1F ) {
+
+				this.X = startX;
+				this.Y = startY;
+
+				xSpeed = Utility.GetRandomF() * 10 - 5;
+				ySpeed = Utility.GetRandomF() * 10 - 5;
+				ScaleY = 1;
+			}
 
 			float velocity = (float)Math.Sqrt( xSpeed * xSpeed + ySpeed * ySpeed );
 			ScaleX = velocity;
@@ -81,9 +96,15 @@ namespace FireflyGLTest {
 				}
 			}
 
-			if ( X < 0 || X > 800 || Y > 500 ) {
-				Firefly.RemoveEntity( this );
-				new Particle( 400, 250 );
+			if ( X < 0 || X > 800 || Y > 500 || Y < 0 ) {
+
+				this.X = startX;
+				this.Y = startY;
+
+				xSpeed = Utility.GetRandomF() * 10 - 5;
+				ySpeed = Utility.GetRandomF() * 10 - 5;
+
+				ScaleY = 1;
 			}
 		}
 

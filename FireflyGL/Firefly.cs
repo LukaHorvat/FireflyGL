@@ -34,6 +34,7 @@ namespace FireflyGL {
 			get;
 			set;
 		}
+		private static float totalTime;
 
 		private static VertexShader defaultShapeVertexShader, defaultTextureVertexShader;
 		private static FragmentShader defaultShapeFragmentShader, defaultTexturedFragmentShader;
@@ -132,6 +133,7 @@ namespace FireflyGL {
 			var individualTimer = new Stopwatch();
 			var renderTimer = new Stopwatch();
 			var updateTimer = new Stopwatch();
+			var totalTimer = new Stopwatch();
 
 			setupOpenGL();
 			Input.Initialize();
@@ -139,6 +141,8 @@ namespace FireflyGL {
 			renderTimer.Start();
 			updateTimer.Start();
 			while ( !kill ) {
+
+				totalTimer.Restart();
 
 				if ( renderTimer.ElapsedTicks / (float)Stopwatch.Frequency + renderOverTime > renderLock ) {
 
@@ -171,6 +175,11 @@ namespace FireflyGL {
 					individualTimer.Reset();
 
 					updateTimer.Restart();
+				}
+
+				if ( totalTimer.ElapsedMilliseconds > 1 ) {
+					totalTimer.Stop();
+					totalTime = totalTimer.ElapsedTicks / (float)Stopwatch.Frequency * 1000;
 				}
 			}
 		}
@@ -206,7 +215,10 @@ namespace FireflyGL {
 
 		private static void update () {
 
-			window.GameWindow.Title = "UpdateTime( " + updateList.Count + " ): " + (int)( updateTime * 1000 ) + " RenderTime( " + renderList.Count + " ): " + (int)( renderTime * 1000 );
+			window.GameWindow.Title =
+				"UpdateTime( " + updateList.Count + " ): " + (int)( updateTime * 1000 ) +
+				" RenderTime( " + renderList.Count + " ): " + (int)( renderTime * 1000 ) +
+				" TotalTime: " + (int)totalTime;
 
 			foreach ( IUpdatable updatable in updateRemoveList ) {
 				updateList.Remove( updatable );

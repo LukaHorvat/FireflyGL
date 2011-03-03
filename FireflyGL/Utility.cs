@@ -104,8 +104,9 @@ namespace FireflyGL {
 			return toReturn;
 		}
 
-		public static void ProcessOGLErrors () {
+		public static void ProcessOGLErrors ( bool Process = false ) {
 
+			if ( !Process ) return;
 			OpenTK.Graphics.OpenGL.ErrorCode errCode = OpenTK.Graphics.OpenGL.GL.GetError();
 			if ( errCode != OpenTK.Graphics.OpenGL.ErrorCode.NoError ) {
 				throw new Exception( errCode.ToString() );

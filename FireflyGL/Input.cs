@@ -208,13 +208,6 @@ namespace FireflyGL {
 		BackSlash,
 		LastKey
 	}
-	public enum KeyState : int {
-
-		Up = 0,
-		Down,
-		Click
-	}
-
 	public enum MouseButton : int {
 		Left = 0,
 		Middle,
@@ -230,12 +223,12 @@ namespace FireflyGL {
 		Button9,
 		LastButton
 	}
-	public enum MouseState : int {
-
+	public enum InputState : int {
 		Up = 0,
 		Down,
 		Click
 	}
+
 
 	class Input {
 
@@ -245,25 +238,41 @@ namespace FireflyGL {
 		public static event MouseHandler MouseRelease;
 		public static event MouseHandler MouseMove;
 
+		static OpenTK.Vector2 absoluteMouse;
+		static bool mouseMoved = true;
+
+		static int relativeMouseX, relativeMouseY;
+
 		static int mouseX;
 		public static int MouseX {
-			get { return Input.mouseX; }
-			set { Input.mouseX = value; }
+			get {
+				if ( mouseMoved ) updateMouse();
+				return (int)absoluteMouse.X;
+			}
 		}
 
 		static int mouseY;
 		public static int MouseY {
-			get { return Input.mouseY; }
-			set { Input.mouseY = value; }
+			get {
+				if ( mouseMoved ) updateMouse();
+				return (int)absoluteMouse.Y;
+			}
 		}
 
-		static Dictionary<Key, KeyState> keys;
-		public static Dictionary<Key, KeyState> Keys {
+		static Dictionary<Key, InputState> keys;
+		public static Dictionary<Key, InputState> Keys {
 			get { return Input.keys; }
 			set { Input.keys = value; }
 		}
 
-		static LinkedList<Key> toRelease;
+		static Dictionary<MouseButton, InputState> mouseButtons;
+		public static Dictionary<MouseButton, InputState> MouseButtons {
+			get { return Input.mouseButtons; }
+			set { Input.mouseButtons = value; }
+		}
+
+		static LinkedList<Key> keysToRelease;
+		static LinkedList<MouseButton> mouseButtonsToRelease;
 
 		public static void Initialize () {
 
@@ -272,54 +281,94 @@ namespace FireflyGL {
 			MousePress = new MouseHandler( pressHandler );
 			MouseRelease = new MouseHandler( releaseHandler );
 			MouseMove = new MouseHandler( moveHandler );
-			toRelease = new LinkedList<Key>();
-			keys = new Dictionary<Key, KeyState>();
+
+			keysToRelease = new LinkedList<Key>();
+			mouseButtonsToRelease = new LinkedList<MouseButton>();
+			keys = new Dictionary<Key, InputState>();
+			mouseButtons = new Dictionary<MouseButton, InputState>();
 
 			string[] names = Enum.GetNames( typeof( Key ) );
 			for ( int i = 0 ; i < names.Length ; ++i ) {
 				try {
-					keys.Add( (Key)Enum.Parse( typeof( Key ), names[ i ] ), KeyState.Up );
+					keys.Add( (Key)Enum.Parse( typeof( Key ), names[ i ] ), InputState.Up );
 				} catch ( Exception e ) {
 					string stupingWarnings = e.Message;
 				}
 			}
 
+			names = Enum.GetNames( typeof( MouseButton ) );
+			for ( int i = 0 ; i < names.Length ; ++i ) {
+				try {
+					mouseButtons.Add( (MouseButton)Enum.Parse( typeof( MouseButton ), names[ i ] ), InputState.Up );
+				} catch ( Exception e ) {
+					string stupidWarnings = e.Message;
+				}
+			}
+
 			Firefly.Window.GameWindow.Mouse.Move += new EventHandler<MouseMoveEventArgs>( opentkMove );
+			Firefly.Window.GameWindow.Mouse.ButtonDown += new EventHandler<MouseButtonEventArgs>( opentkMouseDown );
+			Firefly.Window.GameWindow.Mouse.ButtonUp += new EventHandler<MouseButtonEventArgs>( opentkMouseUp );
 			Firefly.Window.GameWindow.Keyboard.KeyDown += new EventHandler<KeyboardKeyEventArgs>( opentkKeyDown );
 			Firefly.Window.GameWindow.Keyboard.KeyUp += new EventHandler<KeyboardKeyEventArgs>( opentkKeyUp );
 		}
 
 		public static void Update () {
 
-			foreach ( Key key in toRelease ) {
-				keys[ key ] = KeyState.Up;
+			foreach ( Key key in keysToRelease ) {
+				keys[ key ] = InputState.Up;
 			}
-			toRelease.Clear();
+			foreach ( MouseButton button in mouseButtonsToRelease ) {
+				mouseButtons[ button ] = InputState.Up;
+			}
+			keysToRelease.Clear();
+			mouseButtonsToRelease.Clear();
 		}
 
+		static void updateMouse () {
+
+			mouseMoved = false;
+			absoluteMouse = Camera.CurrentCamera.GetApsoluteMouse( relativeMouseX, relativeMouseY );
+		}
+
+		static void opentkMouseUp ( object sender, MouseButtonEventArgs e ) {
+
+			MouseButton temp = (MouseButton)Enum.Parse(
+				typeof( MouseButton ),
+				Enum.GetName( typeof( MouseButton ), (int)e.Button )
+				);
+			mouseButtons[ temp ] = InputState.Click;
+			mouseButtonsToRelease.AddLast( temp );
+		}
+		static void opentkMouseDown ( object sender, MouseButtonEventArgs e ) {
+
+			mouseButtons[ (MouseButton)Enum.Parse(
+				typeof( MouseButton ),
+				Enum.GetName( typeof( MouseButton ), (int)e.Button )
+				)
+				] = InputState.Down;
+		}
 		static void opentkKeyUp ( object sender, KeyboardKeyEventArgs e ) {
 
 			Key temp = (Key)Enum.Parse(
 				typeof( Key ),
 				Enum.GetName( typeof( Key ), (int)e.Key )
 				);
-			keys[ temp ] = KeyState.Click;
-			toRelease.AddLast( temp );
+			keys[ temp ] = InputState.Click;
+			keysToRelease.AddLast( temp );
 		}
-
 		static void opentkKeyDown ( object sender, KeyboardKeyEventArgs e ) {
 
 			keys[ (Key)Enum.Parse(
 				typeof( Key ),
 				Enum.GetName( typeof( Key ), (int)e.Key )
 				)
-				] = KeyState.Down;
+				] = InputState.Down;
 		}
-
 		static void opentkMove ( object sender, MouseMoveEventArgs e ) {
 
-			mouseX = e.X;
-			mouseY = e.Y;
+			relativeMouseX = e.X;
+			relativeMouseY = e.Y;
+			mouseMoved = true;
 		}
 
 		static void pressHandler ( MouseEventArgs Args ) {

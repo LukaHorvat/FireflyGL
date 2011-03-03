@@ -1,0 +1,18 @@
+﻿<config Version="1">
+  <OutputFolder>$(AppDir)</OutputFolder>
+  <ReportFolderNetFull>$(SystemRoot)\Temp\EQATECProfilerLogs</ReportFolderNetFull>
+  <ReportFolderNetCF>\Temp\EQATECProfilerLogs</ReportFolderNetCF>
+  <AutoSnapshot>Main OnStop ApplicationEnd</AutoSnapshot>
+  <TinyMethodAction>Skip</TinyMethodAction>
+  <ServerControlHost>localhost</ServerControlHost>
+  <ServerControlPort>4515</ServerControlPort>
+  <RuntimeModuleLogLevel>Errors</RuntimeModuleLogLevel>
+  <ExcludeFiles>
+    <ExcludeFile>FireflyGLTest.vshost.exe</ExcludeFile>
+  </ExcludeFiles>
+  <SignActions>
+    <SignAction action="Skip" publickey="ACQAAASAAACUAAAABgIAAAAkAABSU0ExAAQAABEAAACj4FqvuH9x+4/QK1EnB/KJwSNB3pjGzi7BSUtxwgyyAyy9ZdCRtEffPsdyJX77n6NZEgGTeJDgZ9odKaM5lIoSspwoR6eHzJ++8qO/eCZwJuhfNqq4JyKN9LtYDjrgWZreA28Kl6DmmC9UBtmNEURV8zI1D22DadtlXpw+eXbCyA==" usedby="C:\Users\Luka\Documents\Visual Studio 2010\Projects\FireflyGL\FireflyGLTest\bin\Debug\OpenTK.dll" keyfile="" />
+  </SignActions>
+  <AppType>FullNet</AppType>
+  <InputFolderOK>true</InputFolderOK>
+</config>
